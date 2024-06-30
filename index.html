@@ -92,14 +92,36 @@
         const withdrawBtn = document.getElementById('withdrawBtn');
         const transactionsDiv = document.getElementById('transactions');
 
+        // Load data from localStorage
+        function loadData() {
+            const savedBalance = localStorage.getItem('balance');
+            const savedTransactions = localStorage.getItem('transactions');
+            if (savedBalance) {
+                balance = parseFloat(savedBalance);
+                updateBalance();
+            }
+            if (savedTransactions) {
+                transactions = JSON.parse(savedTransactions);
+                updateTransactionLog();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('balance', balance.toString());
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
         function updateBalance() {
             balanceDisplay.textContent = `Balance: $${balance.toFixed(2)}`;
+            saveData();
         }
 
         function addTransaction(type, amount) {
             const date = new Date().toLocaleString();
             transactions.unshift({ type, amount, date });
             updateTransactionLog();
+            saveData();
         }
 
         function updateTransactionLog() {
@@ -137,6 +159,9 @@
                 alert('Please enter a valid amount to withdraw.');
             }
         });
+
+        // Load data when the page loads
+        loadData();
     </script>
 </body>
 </html>
