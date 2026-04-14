@@ -3,165 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bank Account</title>
+    <title>Task Reset Companion</title>
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #f3f4f8;
+            --panel: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --accent: #6d5efc;
+            --accent-soft: #edeaff;
+            --ok: #047857;
+            --warn: #b45309;
+            --border: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .app {
+            max-width: 980px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f0f0f0;
+            padding: 24px 16px 40px;
         }
-        .container {
-            background-color: white;
-            padding: 20px;
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+        }
+
+        h1, h2, h3 { margin-top: 0; }
+        h1 { margin-bottom: 8px; }
+
+        p { line-height: 1.5; }
+
+        .muted { color: var(--muted); }
+
+        .ideas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+        }
+
+        .idea {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            background: #fafafa;
+        }
+
+        .state-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        button {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover { border-color: var(--accent); }
+
+        .state-btn.active {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            color: #3f34b0;
+            font-weight: 600;
+        }
+
+        .pill {
+            display: inline-flex;
+            border-radius: 999px;
+            background: #eefaf6;
+            color: var(--ok);
+            padding: 4px 10px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        ul {
+            margin-top: 6px;
+            padding-left: 20px;
+        }
+
+        .quote {
+            border-left: 3px solid var(--accent);
+            background: #f9f8ff;
+            padding: 10px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 8px 0;
         }
-        h1, h2 {
-            color: #333;
-            text-align: center;
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
-        .balance {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
-        }
-        input {
+
+        input[type="text"], input[type="number"] {
             width: 100%;
             padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
         }
-        button {
-            width: 48%;
-            padding: 10px;
-            margin: 5px 1%;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
+
+        .timer {
+            font-size: 30px;
+            font-weight: 700;
         }
-        #depositBtn {
-            background-color: #4CAF50;
+
+        .small {
+            font-size: 12px;
+            color: var(--warn);
         }
-        #withdrawBtn {
-            background-color: #f44336;
-        }
-        #transactionLog {
-            margin-top: 20px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
-        .transaction {
-            padding: 5px;
-            border-bottom: 1px solid #eee;
-        }
-        .deposit {
-            color: green;
-        }
-        .withdraw {
-            color: red;
+
+        @media (max-width: 760px) {
+            .row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>My Bank Account</h1>
-        <div class="balance" id="balance">Balance: $0.00</div>
-        <input type="number" id="amount" placeholder="Enter amount">
-        <button id="depositBtn">Deposit</button>
-        <button id="withdrawBtn">Withdraw</button>
-        
-        <div id="transactionLog">
-            <h2>Transaction History</h2>
-            <div id="transactions"></div>
-        </div>
-    </div>
+    <main class="app">
+        <section class="card">
+            <h1>Task Reset Companion</h1>
+            <p class="muted">A tiny personal helper for ADHD/anxiety task initiation. Not gamified: just practical next steps, self-talk, and calming structure.</p>
+            <p><strong>How to use:</strong> Pick your current state, take one tiny action, and stop after 5 minutes if you want.</p>
+        </section>
+
+        <section class="card">
+            <h2>8 app concept ideas (non-gamified)</h2>
+            <div class="ideas">
+                <div class="idea"><strong>1) State-First Coach</strong><br>Starts by naming your emotional state, then gives matching strategy scripts.</div>
+                <div class="idea"><strong>2) Tiny Step Generator</strong><br>Turns any vague task into one physical first action.</div>
+                <div class="idea"><strong>3) Shame Spiral Interrupt</strong><br>Catches self-criticism and offers a fast reframe + lower-the-bar reset.</div>
+                <div class="idea"><strong>4) Minimum Viable Day Planner</strong><br>Asks for only 1–3 “today counts if…” items.</div>
+                <div class="idea"><strong>5) Re-entry After Drift</strong><br>Guides getting back on track after a week/month off.</div>
+                <div class="idea"><strong>6) Body-Double Board</strong><br>Simple launch links for co-working/focus sessions.</div>
+                <div class="idea"><strong>7) Anxiety-to-Action Triage</strong><br>Separates urgent-feeling from actually urgent.</div>
+                <div class="idea"><strong>8) Evidence Log</strong><br>Done-list and “proof I can do hard things” log.</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Pick your current state</h2>
+            <div class="state-grid" id="stateButtons"></div>
+        </section>
+
+        <section class="card" id="stateOutput">
+            <span class="pill">Choose a state above</span>
+            <h3 id="stateTitle">No state selected yet</h3>
+            <p id="statePrompt" class="muted">When you select a state, you’ll see targeted strategies and a short self-talk script.</p>
+            <div class="row">
+                <div>
+                    <h3>Try this now</h3>
+                    <ul id="strategyList"></ul>
+                </div>
+                <div>
+                    <h3>Self-talk</h3>
+                    <div id="selfTalk"></div>
+                </div>
+            </div>
+            <h3>Paired YouTube suggestions</h3>
+            <ul id="videoList"></ul>
+        </section>
+
+        <section class="card">
+            <h2>Tiny first action builder</h2>
+            <p class="muted">Write a task, then reduce it until your body says “I can do that.”</p>
+            <input id="taskInput" type="text" placeholder="Example: Finish project update">
+            <button id="splitBtn">Generate tiny starter actions</button>
+            <ul id="tinyActions"></ul>
+        </section>
+
+        <section class="card">
+            <h2>5-minute permission timer</h2>
+            <p class="muted">You are allowed to stop when it ends.</p>
+            <div class="timer" id="timer">05:00</div>
+            <div style="margin-top: 8px; display: flex; gap: 8px;">
+                <button id="startTimer">Start</button>
+                <button id="resetTimer">Reset</button>
+            </div>
+            <p class="small">Tip: Use this for “just touch it” sessions.</p>
+        </section>
+    </main>
 
     <script>
-        let balance = 0;
-        let transactions = [];
-        const balanceDisplay = document.getElementById('balance');
-        const amountInput = document.getElementById('amount');
-        const depositBtn = document.getElementById('depositBtn');
-        const withdrawBtn = document.getElementById('withdrawBtn');
-        const transactionsDiv = document.getElementById('transactions');
-
-        // Load data from localStorage
-        function loadData() {
-            const savedBalance = localStorage.getItem('balance');
-            const savedTransactions = localStorage.getItem('transactions');
-            if (savedBalance) {
-                balance = parseFloat(savedBalance);
-                updateBalance();
+        const stateData = {
+            avoiding: {
+                title: 'When you are avoiding a task',
+                prompt: 'You may be avoiding a feeling, not the task itself.',
+                strategies: [
+                    'Name the feeling first: overwhelm, dread, guilt, boredom.',
+                    'Shrink the task until your body relaxes slightly.',
+                    'Do a band-aid version that reduces stress, not perfection.'
+                ],
+                selfTalk: [
+                    'I am not avoiding the task. I am avoiding a feeling.',
+                    'What is the tiniest possible first action?',
+                    'I can do a version of this, not the perfect one.'
+                ],
+                videos: [
+                    { title: 'MuchelleB (ADHD/Productivity + emotions)', url: 'https://www.youtube.com/@MuchelleB/videos' },
+                    { title: 'How to ADHD – “Wall of Awful” style initiation content', url: 'https://www.youtube.com/@HowtoADHD/videos' }
+                ]
+            },
+            no_motivation: {
+                title: 'When motivation is zero',
+                prompt: 'Diagnose the type: burnout, avoidance, low energy, or initiation difficulty.',
+                strategies: [
+                    'Handle basics first: water, food, movement, fresh air.',
+                    'Choose a minimum viable day with 1–3 wins.',
+                    'Use action to create motivation, not the reverse.'
+                ],
+                selfTalk: [
+                    'Which kind of no-motivation is this?',
+                    'I only need one tiny action right now.',
+                    'Minimum viable day still counts as a real day.'
+                ],
+                videos: [
+                    { title: 'MuchelleB – getting unstuck and reset routines', url: 'https://www.youtube.com/@MuchelleB/videos' },
+                    { title: 'Therapy in a Nutshell – practical anxiety/energy tools', url: 'https://www.youtube.com/@TherapyinaNutshell/videos' }
+                ]
+            },
+            overwhelmed: {
+                title: 'When you are overwhelmed',
+                prompt: 'Overwhelm usually means too many open loops, not personal failure.',
+                strategies: [
+                    'Run a quick brain dump (“secret project audit”).',
+                    'Split into Active vs Pipeline lists.',
+                    'Pick one thing that creates the most relief.'
+                ],
+                selfTalk: [
+                    'Overwhelm is information, not a verdict.',
+                    'I do not need to do all of this now.',
+                    'What can I officially put down today?'
+                ],
+                videos: [
+                    { title: 'MuchelleB – simplification and reset planning', url: 'https://www.youtube.com/@MuchelleB/videos' },
+                    { title: 'Cal Newport – focus and workload triage ideas', url: 'https://www.youtube.com/@CalNewportMedia/videos' }
+                ]
+            },
+            shame: {
+                title: 'When shame is spiraling',
+                prompt: 'Interrupt early: shift from identity attack to method adjustment.',
+                strategies: [
+                    'Replace “what is wrong with me?” with “what did not work in this method?”',
+                    'Lower the bar to 30–50% on purpose.',
+                    'Track a done-list for evidence, not just misses.'
+                ],
+                selfTalk: [
+                    'Shame has never helped me do the thing.',
+                    'That method failed me; I did not fail.',
+                    'Something is not nothing.'
+                ],
+                videos: [
+                    { title: 'KC Davis (Struggle Care) – self-compassion + function', url: 'https://www.youtube.com/@DomesticBlisters/videos' },
+                    { title: 'How to ADHD – shame + executive function framing', url: 'https://www.youtube.com/@HowtoADHD/videos' }
+                ]
+            },
+            initiation: {
+                title: 'When initiation feels neurologically blocked',
+                prompt: 'Use external starts: trigger beats willpower.',
+                strategies: [
+                    'Set a trigger: “When coffee is ready, open laptop.”',
+                    'Pre-decide first three actions before the work block.',
+                    'Place tools in your path (doorway activation).'
+                ],
+                selfTalk: [
+                    'This is initiation difficulty, not laziness.',
+                    'I need an external start, not internal motivation.',
+                    'My task is too vague; make it physical and specific.'
+                ],
+                videos: [
+                    { title: 'How to ADHD – getting started + executive function', url: 'https://www.youtube.com/@HowtoADHD/videos' },
+                    { title: 'MuchelleB – realistic ADHD-friendly planning', url: 'https://www.youtube.com/@MuchelleB/videos' }
+                ]
+            },
+            anxiety: {
+                title: 'When anxiety and productivity collide',
+                prompt: 'Urgent-feeling is not always urgent-reality.',
+                strategies: [
+                    'Slow your body first: breathe slower, unclench, sip water.',
+                    'Ask: urgent in reality, or urgent in feeling?',
+                    'Choose good-enough completion criteria before starting.'
+                ],
+                selfTalk: [
+                    'My nervous system is trying to protect me.',
+                    'Desperate energy makes me worse, not better.',
+                    'Done and clear is enough for this task.'
+                ],
+                videos: [
+                    { title: 'Therapy in a Nutshell – anxiety regulation skills', url: 'https://www.youtube.com/@TherapyinaNutshell/videos' },
+                    { title: 'HealthyGamerGG – anxiety and task paralysis discussions', url: 'https://www.youtube.com/@HealthyGamerGG/videos' }
+                ]
+            },
+            reentry: {
+                title: 'When getting back on track after a long gap',
+                prompt: 'Don’t repay the gap. Restart from today at low intensity.',
+                strategies: [
+                    'Do a full open-loop dump first.',
+                    'Pick one re-entry task only.',
+                    'Start at 30% effort and repeat, don’t sprint.'
+                ],
+                selfTalk: [
+                    'I do not owe the gap back.',
+                    'This is continuing, not starting over.',
+                    'One touch of the task counts today.'
+                ],
+                videos: [
+                    { title: 'MuchelleB – reset after falling off routines', url: 'https://www.youtube.com/@MuchelleB/videos' },
+                    { title: 'Elizabeth Filips – gentle productivity and recovery', url: 'https://www.youtube.com/@elizabethfilips/videos' }
+                ]
             }
-            if (savedTransactions) {
-                transactions = JSON.parse(savedTransactions);
-                updateTransactionLog();
-            }
+        };
+
+        const stateButtons = document.getElementById('stateButtons');
+        const stateTitle = document.getElementById('stateTitle');
+        const statePrompt = document.getElementById('statePrompt');
+        const strategyList = document.getElementById('strategyList');
+        const selfTalk = document.getElementById('selfTalk');
+        const videoList = document.getElementById('videoList');
+
+        function renderState(key) {
+            const info = stateData[key];
+            if (!info) return;
+
+            document.querySelectorAll('.state-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.state === key);
+            });
+
+            stateTitle.textContent = info.title;
+            statePrompt.textContent = info.prompt;
+            strategyList.innerHTML = info.strategies.map(item => `<li>${item}</li>`).join('');
+            selfTalk.innerHTML = info.selfTalk.map(line => `<div class="quote">“${line}”</div>`).join('');
+            videoList.innerHTML = info.videos.map(video => `<li><a href="${video.url}" target="_blank" rel="noopener noreferrer">${video.title}</a></li>`).join('');
         }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('balance', balance.toString());
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-        }
-
-        function updateBalance() {
-            balanceDisplay.textContent = `Balance: $${balance.toFixed(2)}`;
-            saveData();
-        }
-
-        function addTransaction(type, amount) {
-            const date = new Date().toLocaleString();
-            transactions.unshift({ type, amount, date });
-            updateTransactionLog();
-            saveData();
-        }
-
-        function updateTransactionLog() {
-            transactionsDiv.innerHTML = transactions.map(t => `
-                <div class="transaction ${t.type}">
-                    ${t.date}: ${t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
-                </div>
-            `).join('');
-        }
-
-        depositBtn.addEventListener('click', () => {
-            const amount = parseFloat(amountInput.value);
-            if (!isNaN(amount) && amount > 0) {
-                balance += amount;
-                updateBalance();
-                addTransaction('deposit', amount);
-                amountInput.value = '';
-            } else {
-                alert('Please enter a valid amount to deposit.');
-            }
+        Object.keys(stateData).forEach((key, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'state-btn';
+            btn.dataset.state = key;
+            btn.textContent = stateData[key].title.replace('When ', '').replace('you are ', '');
+            btn.addEventListener('click', () => renderState(key));
+            stateButtons.appendChild(btn);
+            if (index === 0) renderState(key);
         });
 
-        withdrawBtn.addEventListener('click', () => {
-            const amount = parseFloat(amountInput.value);
-            if (!isNaN(amount) && amount > 0) {
-                if (amount <= balance) {
-                    balance -= amount;
-                    updateBalance();
-                    addTransaction('withdraw', amount);
-                    amountInput.value = '';
-                } else {
-                    alert('Insufficient funds!');
+        const taskInput = document.getElementById('taskInput');
+        const splitBtn = document.getElementById('splitBtn');
+        const tinyActions = document.getElementById('tinyActions');
+
+        splitBtn.addEventListener('click', () => {
+            const rawTask = taskInput.value.trim();
+            if (!rawTask) {
+                tinyActions.innerHTML = '<li>Add a task first.</li>';
+                return;
+            }
+
+            const starterActions = [
+                `Open the place where this lives: ${rawTask}.`,
+                `Spend 60 seconds listing 3 mini-steps for: ${rawTask}.`,
+                `Do only the first mini-step, then re-check how you feel.`
+            ];
+
+            tinyActions.innerHTML = starterActions.map(action => `<li>${action}</li>`).join('');
+        });
+
+        const timerDisplay = document.getElementById('timer');
+        const startTimerBtn = document.getElementById('startTimer');
+        const resetTimerBtn = document.getElementById('resetTimer');
+        let remaining = 300;
+        let timerRef = null;
+
+        function paintTimer() {
+            const mins = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const secs = (remaining % 60).toString().padStart(2, '0');
+            timerDisplay.textContent = `${mins}:${secs}`;
+        }
+
+        startTimerBtn.addEventListener('click', () => {
+            if (timerRef) return;
+            timerRef = setInterval(() => {
+                remaining -= 1;
+                paintTimer();
+                if (remaining <= 0) {
+                    clearInterval(timerRef);
+                    timerRef = null;
+                    alert('5 minutes done. You have permission to stop.');
                 }
-            } else {
-                alert('Please enter a valid amount to withdraw.');
-            }
+            }, 1000);
         });
 
-        // Load data when the page loads
-        loadData();
+        resetTimerBtn.addEventListener('click', () => {
+            if (timerRef) {
+                clearInterval(timerRef);
+                timerRef = null;
+            }
+            remaining = 300;
+            paintTimer();
+        });
+
+        paintTimer();
     </script>
 </body>
 </html>
